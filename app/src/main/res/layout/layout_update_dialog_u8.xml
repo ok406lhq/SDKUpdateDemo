@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F8F8F8"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/linear_dialog_title_yfjh"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#C83110"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_dialog_title_u8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="应用更新"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout android:id="@+id/contentPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dip"
+            android:paddingBottom="12dip"
+            android:paddingLeft="14dip"
+            android:paddingRight="10dip"
+            android:overScrollMode="ifContentScrolls">
+            <TextView
+                android:id="@+id/tv_dialog_tips_u8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="暂无内容"
+                android:textAlignment="center"
+                android:textColor="#aaaaaa"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_u8_update"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="#C83110"
+                android:text="正在下载中，请稍候..."
+                android:textColor="#F8F8F8"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/btn_u8_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="#C83110"
+                    android:text="@string/u8_update_no"
+                    android:textColor="#F8F8F8"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn_use_u8"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="#C83110"
+                    android:text="@string/u8_update_yes"
+                    android:textColor="#F8F8F8"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

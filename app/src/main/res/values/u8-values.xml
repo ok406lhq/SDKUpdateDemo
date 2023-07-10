@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="u8_update_yes">确   定</string>
+    <string name="u8_update_no">取   消</string>
+    <string name="u8_download_new">请下载更新版本！</string>
+    <string name="u8_start_download">开始后台下载更新…</string>
+    <string name="u8_notification_update_tips">更新提示</string>
+    <string name="u8_notification_update_download">正在下载中…</string>
+    <string name="u8_download_finish">下载完成，点击安装</string>
+    <string name="u8_download_percentage">已下载</string>
+
+</resources>

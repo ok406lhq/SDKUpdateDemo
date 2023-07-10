@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.u8.sdkdemo'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.u8.sdkdemo.update"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        release {
+            keyAlias 'ugame-ct-en'
+            keyPassword 'ct-en123'
+            //  storeFile file('J:/awork_wjy/a_packageKey/byzh/debug.keystore')
+            storeFile file('E:\\sdk\\U8SDK_PackageTool\\config\\keystore\\ugame-ct-en.keystore')
+            storePassword 'ct-en123'
+        }
+        //导入工程到自己电脑时，请自行修改签名文件路径
+        debug {
+            keyAlias 'ugame-ct-en'
+            keyPassword 'ct-en123'
+            //  storeFile file('J:/awork_wjy/a_packageKey/byzh/debug.keystore')
+            storeFile file('E:\\sdk\\U8SDK_PackageTool\\config\\keystore\\ugame-ct-en.keystore')
+            storePassword 'ct-en123'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+}
