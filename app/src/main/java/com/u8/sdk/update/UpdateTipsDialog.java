@@ -1,6 +1,7 @@
 package com.u8.sdk.update;
 
 
+import static com.u8.sdk.update.UpdateNew_background_Version.deleteCacheApkFile;
 import static com.u8.sdk.update.UpdateNew_background_Version.getDownloadFileName;
 import static com.u8.sdk.update.UpdateNew_background_Version.isCacheApkFileExists;
 
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
     private Button btnUse;
     private Button btnUsCancel;
     private Button btnUsUpdate;
+    //    private Button btnUsDelete;
     private TextView tvTips;
     private TextView tvTitle;
     private Context context;
@@ -70,6 +73,7 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
         btnUse = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_use_u8"));
         btnUsCancel = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_u8_cancel"));
         btnUsUpdate = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_u8_update"));
+//        btnUsDelete = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_u8_delete"));
         tvTips = (TextView) view.findViewById(UpdateTools.getIdByName(context, "id", "tv_dialog_tips_u8"));
         tvTitle = (TextView) view.findViewById(UpdateTools.getIdByName(context, "id", "tv_dialog_title_u8"));
         tvTitle.setText(titleMsg);
@@ -77,6 +81,7 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
         btnUse.setOnClickListener(this);
         btnUsCancel.setOnClickListener(this);
         btnUsUpdate.setOnClickListener(this);
+//        btnUsDelete.setOnClickListener(this);
 //        tvClose.setOnClickListener(this);
         setCanceledOnTouchOutside(false);
         setCancelable(false);
@@ -148,7 +153,8 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
                 updateNew_background_Version.download(updateUrl);
             } else {
                 clickable = true;
-                btnUsUpdate.setText(downloadFinish);
+                deleteCacheApkFile(context);
+                updateNew_background_Version.download(updateUrl);
             }
         } else if (v.getId() == UpdateTools.getIdByName(context, "id", "btn_u8_update")) {
             if (clickable) {
@@ -157,5 +163,9 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
                 Toast.makeText(context, "很快下载完了哦~", Toast.LENGTH_SHORT).show();
             }
         }
+//        else if (v.getId() == UpdateTools.getIdByName(context, "id", "btn_u8_delete")) {
+//            deleteCacheApkFile(context);
+//            Toast.makeText(context, "已经删除了安装包，请重新下载", Toast.LENGTH_SHORT).show();
+//        }
     }
 }

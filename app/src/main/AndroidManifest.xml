@@ -25,7 +25,7 @@
         <!-- 以包名+”.fileprovider”方式命名 -->
         <provider
             android:name="com.u8.sdk.update.U8UpdateProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="${applicationId}.u8FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

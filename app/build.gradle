@@ -7,7 +7,8 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.u8.sdkdemo.update"
+//        applicationId "com.u8.sdkdemo.update"
+        applicationId "com.wsjzds.mi"
         minSdk 21
         targetSdk 33
         versionCode 1

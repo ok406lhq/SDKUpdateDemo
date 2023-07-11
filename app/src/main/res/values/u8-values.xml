@@ -7,6 +7,7 @@
     <string name="u8_notification_update_tips">更新提示</string>
     <string name="u8_notification_update_download">正在下载中…</string>
     <string name="u8_download_finish">下载完成，点击安装</string>
+    <string name="u8_download_delete">重新下载版本</string>
     <string name="u8_download_percentage">已下载</string>
 
 </resources>

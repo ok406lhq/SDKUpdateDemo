@@ -20,8 +20,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.u8.sdk.utils.LogUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -29,19 +31,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @author: Kongzue
- * @github: https://github.com/kongzue/
- * @homepage: http://kongzue.com/
- * @email: myzcxhh@live.cn
- * @createTime: 2020/6/22 15:24
+ * @author: Latte
+ * @createTime: 2023/7/8
  */
 public class UpdateUtil {
-    
+
     /**
      * 日志打印开关
      */
     public static boolean DEBUGMODE = false;
-    
+
+    /**
+     * 前往商店的方式类型：
+     * 1 浏览器链接
+     * 2 应用商店
+     */
+    public final static int GOTOMARKETBYBROWSER = 1;
+    public final static int GOTOMARKETBYAPPSTORE = 2;
+
     /**
      * 主要
      */
@@ -53,14 +60,14 @@ public class UpdateUtil {
     private boolean installWhenDownloadFinish = true;                       //是否在下载结束时自动启动安装 {get/set}
     private File readyFile;                                                 //下载目标文件位置
     private File readyDownloadPath;                                         //设定下载目标文件位置（目录） {get/set}
-    
+
     /**
      * 更新相关
-     * 要显示更新提示对话框，需要使用 {@link #start(String, String, String, String, String, String, boolean)} 方法启动更新流程
+     * 要显示更新提示对话框，需要使用 {@link #start(String, String, String, String, String, String, int, String, boolean)} 方法启动更新流程
      */
     private AlertDialog updateDialog;                                       //更新提示对话框
     private boolean isForced = false;                                       //是否强制更新
-    
+
     /**
      * 状态栏提示通知相关
      * 使用 {@link #showDownloadNotification(String, String)} 开启状态栏提示
@@ -68,14 +75,14 @@ public class UpdateUtil {
     private boolean showNotification = true;                                //是否允许显示通知
     private String notificationTitle;                                       //通知标题
     private String notificationDescription;                                 //通知正文
-    
+
     /**
      * 下载流程监控相关
      */
     private Timer downloadProgressTimer;                                    //下载流程进度刷新控制器
     private int oldProgress = -1;                                           //防止重复刷新标记
     private boolean isAlreadyDownloadApk;                                   //完成下载标记
-    
+
     /**
      * 下载进度相关
      * 使用 {@link #showDownloadProgressDialog(String, String, String)} 开启下载进度对话框
@@ -85,7 +92,7 @@ public class UpdateUtil {
     private String progressDialogTitle;                                     //下载进度提示框标题
     private String progressDialogBackgroundButton;                          //下载进度提示框 “后台下载” 按钮文本
     private String progressDialogCancelButton;                              //下载进度提示框 “取消” 按钮文本
-    
+
     /**
      * 构造方法
      * 若使用对话框相关功能，context 建议使用 Activity，因为目前 Android 规定只能基于 Activity 构建对话框
@@ -96,12 +103,12 @@ public class UpdateUtil {
         contextWeakReference = new WeakReference<>(context);
         downloadManager = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
     }
-    
+
     /**
      * 启动下载和安装方法
      * 注意：若使用此方法启动则不会显示任何提示信息，直接进行下载和安装操作。
      * 下载流程和安装回调方法请参阅 {@link #setOnUpdateStatusChangeListener(OnUpdateStatusChangeListener)}
-     * 要先提示用户更新信息，让用户选择是否更新，请使用 {@link #start(String, String, String, String, String, String, boolean)}
+     * 要先提示用户更新信息，让用户选择是否更新，请使用 {@link #start(String, String, String, String, String, String, int, String, boolean)}
      *
      * @param apkUrl APK 文件下载链接
      */
@@ -115,7 +122,7 @@ public class UpdateUtil {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
         request.setDestinationUri(Uri.fromFile(readyFile));
         request.setMimeType("application/vnd.android.package-archive");
-        
+
         if (notificationTitle == null)
             notificationTitle = contextWeakReference.get().getApplicationInfo().name;
         if (notificationDescription == null)
@@ -129,12 +136,12 @@ public class UpdateUtil {
             request.setVisibleInDownloadsUi(false);
             request.setNotificationVisibility(VISIBILITY_HIDDEN);
         }
-        
+
         isAlreadyDownloadApk = false;
         getOnUpdateStatusChangeListener().onDownloadStart();
         downloadId = downloadManager.enqueue(request);
         log("开始下载：" + apkUrl + " 至：" + readyFile.getAbsolutePath());
-        
+
         if (isShowProgressDialog) {
             progressDialog = new ProgressDialog(contextWeakReference.get());
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -165,7 +172,7 @@ public class UpdateUtil {
         }
         watchDownloadProgress();
     }
-    
+
     /**
      * 启动下载和安装方法 2
      * 通过此方法先启动一个更新提示对话框，然后由用户选择是否更新，或转向应用商店下载
@@ -179,9 +186,14 @@ public class UpdateUtil {
      * @param startDownloadButtonText 按钮 “开始更新” 文字
      * @param cancelButtonText        按钮 “取消” 文字
      * @param goToMarketText          按钮 “前往商店” 文字
+     * @param goToMarketType          按钮类型，type为1标识跳转浏览器，type为2标识跳转应用商店
+     * @param goToMarketText          按钮 “前往商店” 文字
      * @param isForced                是否强制更新
      */
-    public void start(@NonNull final String apkUrl, @NonNull String title, @Nullable String message, @NonNull String startDownloadButtonText, @Nullable String cancelButtonText, @Nullable String goToMarketText, boolean isForced) {
+    public void start(@NonNull final String apkUrl, @NonNull String title, @Nullable String message,
+                      @NonNull String startDownloadButtonText, @Nullable String cancelButtonText,
+                      @Nullable String goToMarketText, @Nullable int goToMarketType,
+                      @Nullable String goToMarketUrl, @Nullable boolean isForced) {
         this.isForced = isForced;
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(contextWeakReference.get());
@@ -202,7 +214,20 @@ public class UpdateUtil {
             updateDialog.setButton(BUTTON_NEUTRAL, goToMarketText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    openMarket();
+                    // 去应用商店
+                    switch (goToMarketType) {
+                        case GOTOMARKETBYBROWSER: // 跳转系统自带浏览器-带链接
+                            jumpBrowser(goToMarketUrl);
+                            break;
+                        case GOTOMARKETBYAPPSTORE: // 跳转设备内应用商店
+                            launchAppDetail(contextWeakReference.get().getPackageName(), goToMarketUrl);
+                            break;
+                        default:
+                            break;
+                    }
+
+
+//                    openMarket();
                     getOnUpdateStatusChangeListener().onDownloadCancel();
                 }
             });
@@ -216,7 +241,7 @@ public class UpdateUtil {
         });
         updateDialog.show();
     }
-    
+
     private void watchDownloadProgress() {
         if (downloadProgressTimer != null) downloadProgressTimer.cancel();
         downloadProgressTimer = new Timer();
@@ -243,7 +268,7 @@ public class UpdateUtil {
             }
         }, 100, 10);
     }
-    
+
     /**
      * 手动调用此方法来安装已下载的 APK
      * 一般不建议使用，除非你自己实现了更新/下载/安装提示等 UI 逻辑。
@@ -261,9 +286,9 @@ public class UpdateUtil {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             log("若未启动，请注意：\n" +
-                    "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".fileProvider") + "”" + "\n" +
+                    "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".u8FileProvider") + "”" + "\n" +
                     "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
-            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".fileprovider", readyFile);
+            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".u8FileProvider", readyFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -275,15 +300,15 @@ public class UpdateUtil {
         getOnUpdateStatusChangeListener().onInstallStart();
         return true;
     }
-    
+
     public boolean installApk(File apkFile) {
         log("准备启动安装步骤");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             log("若未启动，请注意：\n" +
-                    "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".fileProvider") + "”" + "\n" +
+                    "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".u8FileProvider") + "”" + "\n" +
                     "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
-            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".fileProvider", apkFile);
+            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".u8FileProvider", apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -295,7 +320,7 @@ public class UpdateUtil {
         getOnUpdateStatusChangeListener().onInstallStart();
         return true;
     }
-    
+
     private File getRealFileInAndroidM(Context context, long downloadId) {
         File file = null;
         DownloadManager downloader = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -316,7 +341,7 @@ public class UpdateUtil {
         }
         return file;
     }
-    
+
     private int getProgress(long downloadId) {
         DownloadManager.Query query = new DownloadManager.Query().setFilterById(downloadId);
         Cursor cursor = null;
@@ -335,7 +360,7 @@ public class UpdateUtil {
         }
         return progress;
     }
-    
+
     /**
      * 显示下载进度通知
      * 建议使用，因为用户可以在软件后台时通过通知来启动更新的安装过程
@@ -350,7 +375,7 @@ public class UpdateUtil {
         this.notificationDescription = notificationDescription;
         return this;
     }
-    
+
     /**
      * 隐藏下载进度通知
      * 注意，此操作需要声明权限 {"android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"}
@@ -361,7 +386,7 @@ public class UpdateUtil {
         showNotification = false;
         return this;
     }
-    
+
     /**
      * 显示下载进度对话框
      * 建议使用，因为可让用户在下载过程中明显感知下载进度
@@ -378,7 +403,7 @@ public class UpdateUtil {
         this.progressDialogCancelButton = cancelButtonText;
         return this;
     }
-    
+
     /**
      * 隐藏下载进度对话框
      *
@@ -388,9 +413,9 @@ public class UpdateUtil {
         isShowProgressDialog = false;
         return this;
     }
-    
+
     /**
-     * 进入软件商店页
+     * 进入软件商店页 (弃用)
      */
     public void openMarket() {
         try {
@@ -402,22 +427,53 @@ public class UpdateUtil {
             // 打开应用商店失败 可能是没有手机没有安装应用市场
             e.printStackTrace();
             // 调用系统浏览器进入商城
-            openLinkBySystem("https://www.coolapk.com/apk/" + contextWeakReference.get().getPackageName());
+            openLinkBySystem("https://com.xiaomi.market/apk/" + contextWeakReference.get().getPackageName());
         }
     }
-    
+
+    /**
+     * 启动到应用商店app详情界面
+     *
+     * @param appPkg    目标App的包名
+     * @param marketPkg 应用商店包名 ,如果为""则由系统弹出应用商店列表供用户选择,否则调转到目标市场的应用详情界面，某些应用商店可能会失败
+     */
+    public void launchAppDetail(String appPkg, String marketPkg) {
+        try {
+            if (TextUtils.isEmpty(appPkg)) return;
+            Uri uri = Uri.parse("market://details?id=" + appPkg);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (!TextUtils.isEmpty(marketPkg)) {
+                intent.setPackage(marketPkg);
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            contextWeakReference.get().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param url 跳转第三方浏览器链接
+     */
+    public void jumpBrowser(String url) {
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        LogUtil.d("gotoMarket_jump_url:" + url);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        contextWeakReference.get().startActivity(intent);
+    }
+
     private void openLinkBySystem(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         contextWeakReference.get().startActivity(intent);
     }
-    
+
     private OnUpdateStatusChangeListener getOnUpdateStatusChangeListener() {
         if (onUpdateStatusChangeListener == null)
             onUpdateStatusChangeListener = new DefaultUpdateStatusChangeCallBackImpl();
         return onUpdateStatusChangeListener;
     }
-    
+
     /**
      * 设置回调监听器
      *
@@ -428,7 +484,7 @@ public class UpdateUtil {
         this.onUpdateStatusChangeListener = onUpdateStatusChangeListener;
         return this;
     }
-    
+
     /**
      * 取消一切正在进行的行为
      */
@@ -439,7 +495,7 @@ public class UpdateUtil {
         progressDialogDismiss();
         if (updateDialog != null) updateDialog.cancel();
     }
-    
+
     /**
      * 回收方法
      */
@@ -447,62 +503,62 @@ public class UpdateUtil {
         cancel();
         onUpdateStatusChangeListener = null;
     }
-    
+
     private void progressDialogDismiss() {
         if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
         }
     }
-    
+
     public interface OnUpdateStatusChangeListener {
-        
+
         /**
          * 下载开始
          */
         void onDownloadStart();
-        
+
         /**
          * 下载进度
          *
          * @param progress /100
          */
         void onDownloading(int progress);
-        
+
         /**
          * 下载完成时执行
          */
         void onDownloadCompleted();
-        
+
         /**
          * 开始安装
          */
         void onInstallStart();
-        
+
         /**
          * 取消更新
          */
         void onDownloadCancel();
     }
-    
+
     private void log(Object o) {
         if (DEBUGMODE)
             Log.d(">>>", o.toString());
     }
-    
+
     public boolean isForced() {
         return isForced;
     }
-    
+
     public UpdateUtil setForced(boolean forced) {
         isForced = forced;
         return this;
     }
-    
+
     public boolean isInstallWhenDownloadFinish() {
         return installWhenDownloadFinish;
     }
-    
+
     /**
      * 下载完成后是否自动执行安装过程
      *
@@ -513,7 +569,7 @@ public class UpdateUtil {
         this.installWhenDownloadFinish = installWhenDownloadFinish;
         return this;
     }
-    
+
     /**
      * 获取已设置的下载地址
      *
@@ -522,11 +578,11 @@ public class UpdateUtil {
     public String getDownloadUrl() {
         return downloadUrl;
     }
-    
+
     public File getReadyDownloadPath() {
         return readyDownloadPath;
     }
-    
+
     public UpdateUtil setReadyDownloadPath(File readyDownloadPath) {
         this.readyDownloadPath = readyDownloadPath;
         return this;

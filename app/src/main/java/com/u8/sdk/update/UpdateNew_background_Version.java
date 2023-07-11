@@ -261,6 +261,13 @@ public class UpdateNew_background_Version {
         return apkfile.exists();
     }
 
+    public static void deleteCacheApkFile(Context context){
+        File apkfile = new File(getApkFolder(context), getApkName(context));
+        if (apkfile.exists()){
+            apkfile.delete();
+        }
+    }
+
     public static String getApkFolder(Context mContext) {
         String defalt_sdcard_folder = mContext.getExternalFilesDir(DOWNLOAD_SERVICE).getAbsolutePath();
         return defalt_sdcard_folder;
