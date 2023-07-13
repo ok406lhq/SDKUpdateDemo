@@ -5,17 +5,19 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_marginTop="88dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
         android:text="设置下载地址："
         android:textColor="#000"
-        android:textSize="18dp" />    <EditText
+        android:textSize="18dp" />
+
+    <EditText
         android:id="@+id/et_downloadUrl"
         android:layout_width="match_parent"
-        android:text="https://imtt2.dd.qq.com/sjy.00008/sjy.00002/16891/apk/5CC146A29C1CF92939E153471FE8F7D3.apk?fsname=com.tencent.tmgp.xingchen.jyws2_46.apk"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:text="http://down.56ads.com/apk3/qqqlb_v4.0.4_xfdown.com.apk" />
+<!--    http://down.kokoyou.com/usdk/usdk_fembag_496/game_id_4962023-07-12_17-08-33jianfengchatang1.1.14_2265.com.apk-->
     <Button
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"

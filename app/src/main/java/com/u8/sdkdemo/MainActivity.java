@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -61,6 +62,7 @@ public class MainActivity extends Activity {
         btn_update2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("hzmd momo u8sdk", editDownloadUrl.getText().toString());
                 updateUtil.setOnUpdateStatusChangeListener(null)
                         .showDownloadNotification("正在更新", "正在下载更新包...")
                         .showDownloadProgressDialog("正在下载", "后台下载", "取消")
@@ -75,7 +77,7 @@ public class MainActivity extends Activity {
                                         + "全新角色衣装「琪花星烛」是可莉出演关键剧目时所穿的精致服装，色彩明丽，如同点缀着奶油花朵和明红蜡烛的蛋糕，能将快乐与笑容带往冒险所至的每个角落。\n"
                                         + "「帆影游风」是凯亚在舞台上饰演「短刀大盗」时的装扮，以「吸睛」为设计原则的华丽服装。不过衣服穿起来并不麻烦，最花时间打理的是饰品与短刀。\n"
                                         + "\n" + "【七圣召唤更新】全新角色牌、全新行动牌\n" + "全新角色牌、行动牌开放获取。",
-                                "开始", "取消", "去商店",2,"com.xiaomi.market", false);
+                                "开始", "取消", "去商店", 2, "com.xiaomi.market","点击安装", false);
             }
         });
     }
