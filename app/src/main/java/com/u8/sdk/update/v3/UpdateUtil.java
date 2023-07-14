@@ -177,7 +177,7 @@ public class UpdateUtil {
     }
 
     /**
-     * 启动下载和安装方法 2
+     * 启动下载和安装方法
      * 通过此方法先启动一个更新提示对话框，然后由用户选择是否更新，或转向应用商店下载
      * 请注意，使用 isForced 参数标记是否强制更新，如果强制更新，那么对话框将不可使用 “返回” 按键关闭，
      * 另外你可以在 {@link OnUpdateStatusChangeListener#onDownloadCancel()} 中捕获更新取消事件进行处理
@@ -190,7 +190,8 @@ public class UpdateUtil {
      * @param cancelButtonText        按钮 “取消” 文字
      * @param goToMarketText          按钮 “前往商店” 文字
      * @param goToMarketType          按钮类型，type为1标识跳转浏览器，type为2标识跳转应用商店
-     * @param goToMarketText          按钮 “前往商店” 文字
+     * @param goToMarketUrl           根据goToMarketType标识不同的url，type为1代表跳转浏览器链接，2代表应用商店包名
+     * @param clickToInstall          按钮 “点击安装” 文字
      * @param isForced                是否强制更新
      */
     public void start(@NonNull final String apkUrl, @NonNull String title, @Nullable String message, @NonNull String startDownloadButtonText, @Nullable String cancelButtonText, @Nullable String goToMarketText, @Nullable int goToMarketType, @Nullable String goToMarketUrl, @Nullable String clickToInstall, @Nullable boolean isForced) {
