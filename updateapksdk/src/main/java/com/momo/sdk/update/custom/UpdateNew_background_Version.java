@@ -17,8 +17,8 @@ import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 
-import com.u8.sdk.SDKTools;
-import com.u8.sdk.utils.LogUtil;
+import com.momo.sdk.update.common.GeneralUtils;
+import com.momo.sdk.update.common.LogUtil;
 
 import java.io.File;
 import java.text.NumberFormat;
@@ -73,8 +73,8 @@ public class UpdateNew_background_Version {
         //正常下载流程
         request.setAllowedOverRoaming(false);
 
-        String updateTips = mContext.getString(UpdateTools.getIdByName(mContext, "string", "u8_notification_update_tips"));
-        String updating = mContext.getString(UpdateTools.getIdByName(mContext, "string", "u8_notification_update_download"));
+        String updateTips = mContext.getString(GeneralUtils.getIdByName(mContext, "string", "mo_notification_update_tips"));
+        String updating = mContext.getString(GeneralUtils.getIdByName(mContext, "string", "mo_notification_update_download"));
         //通知栏显示
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setTitle(updateTips);
@@ -233,7 +233,7 @@ public class UpdateNew_background_Version {
 
     public static String getApkName(Context context) {
 //        return "game_" + U8SDK.getInstance().getAppID() + "_versioncode_" + SDKTools.getVersionCode(context) + ".apk";
-        return "game_updateDemo_versioncode_" + SDKTools.getVersionCode(context) + ".apk";
+        return "game_updateDemo_versioncode_" + GeneralUtils.getVersionCode(context) + ".apk";
     }
 
     private static boolean isGranted = false;

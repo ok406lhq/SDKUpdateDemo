@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.momo.sdk.update.common.GeneralUtils;
+
 
 /**
  * Created by wjy on 2017/11/18.
@@ -63,12 +65,12 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = View.inflate(context, UpdateTools.getIdByName(context, "layout", "layout_update_dialog_u8"), null);
-        btnUse = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_use_u8"));
-        btnUsCancel = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_u8_cancel"));
-        btnUsUpdate = (Button) view.findViewById(UpdateTools.getIdByName(context, "id", "btn_u8_update"));
-        tvTips = (TextView) view.findViewById(UpdateTools.getIdByName(context, "id", "tv_dialog_tips_u8"));
-        tvTitle = (TextView) view.findViewById(UpdateTools.getIdByName(context, "id", "tv_dialog_title_u8"));
+        View view = View.inflate(context, GeneralUtils.getIdByName(context, "layout", "layout_update_dialog_mo"), null);
+        btnUse = (Button) view.findViewById(GeneralUtils.getIdByName(context, "id", "btn_use_u8"));
+        btnUsCancel = (Button) view.findViewById(GeneralUtils.getIdByName(context, "id", "btn_u8_cancel"));
+        btnUsUpdate = (Button) view.findViewById(GeneralUtils.getIdByName(context, "id", "btn_u8_update"));
+        tvTips = (TextView) view.findViewById(GeneralUtils.getIdByName(context, "id", "tv_dialog_tips_u8"));
+        tvTitle = (TextView) view.findViewById(GeneralUtils.getIdByName(context, "id", "tv_dialog_title_u8"));
         tvTitle.setText(titleMsg);
         tvTips.setText(tipsMsg);
         btnUse.setOnClickListener(this);
@@ -83,9 +85,9 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         // Tag Here：后续可能做国际化
-        String downloadnewv = context.getString(UpdateTools.getIdByName(context, "string", "u8_download_new"));
-        String startdwonload = context.getString(UpdateTools.getIdByName(context, "string", "u8_start_download"));
-        if (v.getId() == UpdateTools.getIdByName(context, "id", "btn_u8_cancel")) {
+        String downloadnewv = context.getString(GeneralUtils.getIdByName(context, "string", "mo_download_new"));
+        String startdwonload = context.getString(GeneralUtils.getIdByName(context, "string", "mo_start_download"));
+        if (v.getId() == GeneralUtils.getIdByName(context, "id", "btn_u8_cancel")) {
             Toast.makeText(context, downloadnewv, Toast.LENGTH_LONG).show();
             if (isForced) { //true 强更 false 不是强更
                 //执行退出程序操作
@@ -105,15 +107,15 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
             } else {
                 dismiss();
             }
-        } else if (v.getId() == UpdateTools.getIdByName(context, "id", "btn_use_u8")) {
+        } else if (v.getId() == GeneralUtils.getIdByName(context, "id", "btn_use_u8")) {
             btnUse.setVisibility(View.GONE);
             btnUsCancel.setVisibility(View.GONE);
             btnUsUpdate.setVisibility(View.VISIBLE);
 
             //执行更新操作(后台下载)
             final UpdateNew_background_Version updateNew_background_Version = new UpdateNew_background_Version(context);
-            String downloadFinish = context.getString(UpdateTools.getIdByName(context, "string", "u8_download_finish"));
-            String downloadPercentage = context.getString(UpdateTools.getIdByName(context, "string", "u8_download_percentage"));
+            String downloadFinish = context.getString(GeneralUtils.getIdByName(context, "string", "mo_download_finish"));
+            String downloadPercentage = context.getString(GeneralUtils.getIdByName(context, "string", "mo_download_percentage"));
             updateNew_background_Version.setUpdateCallback(new UpdateCallBack() {
                 @Override
                 public void callback(boolean isDownLoaded) {
@@ -137,7 +139,7 @@ public class UpdateTipsDialog extends Dialog implements View.OnClickListener {
                 UpdateNew_background_Version.deleteCacheApkFile(context);
                 updateNew_background_Version.download(updateUrl);
             }
-        } else if (v.getId() == UpdateTools.getIdByName(context, "id", "btn_u8_update")) {
+        } else if (v.getId() == GeneralUtils.getIdByName(context, "id", "btn_u8_update")) {
             if (clickable) {
                 UpdateNew_background_Version.openApkNew(context, UpdateNew_background_Version.getDownloadFileName(context));
             } else {

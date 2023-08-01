@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
@@ -18,23 +17,14 @@
         tools:targetApi="31">
 
         <activity
-            android:name="com.u8.sdkdemo.com.momo.sdkdemo.MainActivity"
+            android:name="com.momo.sdkdemo.MainActivity"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <!-- 以包名+”.fileprovider”方式命名 -->
-        <provider
-            android:name="com.u8.sdk.update.U8UpdateProvider"
-            android:authorities="${applicationId}.u8FileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/u8_file_paths" />
-        </provider>
+
     </application>
 
 </manifest>

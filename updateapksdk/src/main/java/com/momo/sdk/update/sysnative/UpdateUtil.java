@@ -24,7 +24,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 
-import com.u8.sdk.utils.LogUtil;
+
+import com.momo.sdk.update.common.LogUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

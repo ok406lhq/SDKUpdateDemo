@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="应用更新"
+            android:text="@string/mo_update_title"
             android:textColor="#ffffff"
             android:textSize="15sp" />
 
@@ -87,7 +87,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="#C83110"
-                    android:text="@string/u8_update_no"
+                    android:text="@string/mo_update_no"
                     android:textColor="#F8F8F8"
                     android:textSize="15sp" />
 
@@ -99,7 +99,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="#C83110"
-                    android:text="@string/u8_update_yes"
+                    android:text="@string/mo_update_yes"
                     android:textColor="#F8F8F8"
                     android:textSize="15sp" />
             </LinearLayout>
