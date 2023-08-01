@@ -1,4 +1,4 @@
-package com.u8.sdk.update;
+package com.momo.sdk.update.custom;
 
 import android.content.Context;
 

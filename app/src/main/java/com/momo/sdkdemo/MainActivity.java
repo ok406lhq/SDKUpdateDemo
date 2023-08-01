@@ -1,4 +1,4 @@
-package com.u8.sdkdemo;
+package com.momo.sdkdemo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.u8.sdk.update.UpdateTipsDialog;
-import com.u8.sdk.update.v3.UpdateUtil;
+import com.momo.sdk.update.custom.UpdateTipsDialog;
+import com.momo.sdk.update.sysnative.UpdateUtil;
+import com.u8.sdkdemo.R;
 
 public class MainActivity extends Activity {
 

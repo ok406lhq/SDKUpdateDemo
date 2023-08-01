@@ -1,4 +1,4 @@
-package com.u8.sdk.update.v3;
+package com.momo.sdk.update.sysnative;
 
 /**
  * @author: Kongzue

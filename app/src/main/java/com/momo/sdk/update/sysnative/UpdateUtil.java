@@ -1,10 +1,9 @@
-package com.u8.sdk.update.v3;
+package com.momo.sdk.update.sysnative;
 
 import static android.app.DownloadManager.Request.VISIBILITY_HIDDEN;
 import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE;
 import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 

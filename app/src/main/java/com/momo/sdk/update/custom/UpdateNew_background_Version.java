@@ -1,8 +1,7 @@
-package com.u8.sdk.update;
+package com.momo.sdk.update.custom;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,13 +14,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 
 import com.u8.sdk.SDKTools;
-import com.u8.sdk.U8SDK;
 import com.u8.sdk.utils.LogUtil;
 
 import java.io.File;
@@ -77,8 +73,6 @@ public class UpdateNew_background_Version {
         //正常下载流程
         request.setAllowedOverRoaming(false);
 
-//        String updateTips = "更新提示";
-//        String updating = "正在下载中…";
         String updateTips = mContext.getString(UpdateTools.getIdByName(mContext, "string", "u8_notification_update_tips"));
         String updating = mContext.getString(UpdateTools.getIdByName(mContext, "string", "u8_notification_update_download"));
         //通知栏显示
@@ -115,13 +109,6 @@ public class UpdateNew_background_Version {
         }
     };
 
-//    private UpdateCallBack callBack;
-//    public interface UpdateCallBack {
-//        void callback(boolean isDownLoaded);
-//    }
-//    public UpdateCallBack getUpdateCallback() {
-//        return callBack;
-//    }
 
     /**
      * 检查下载状态
@@ -273,18 +260,6 @@ public class UpdateNew_background_Version {
         return defalt_sdcard_folder;
     }
 
-    public static int dp2px(Context context, float dpValue) {
-        DisplayMetrics dm = new DisplayMetrics();
-        @SuppressLint("WrongConstant") WindowManager windowMgr = (WindowManager) context.getSystemService("window");
-        if (Build.VERSION.SDK_INT >= 17) {
-            windowMgr.getDefaultDisplay().getRealMetrics(dm);
-        } else {
-            windowMgr.getDefaultDisplay().getMetrics(dm);
-        }
-
-        return (int) (dpValue * dm.density + 0.5F);
-    }
-
     public static void openApkNew(Context context, String fileSavePath) {
         if (Build.VERSION.SDK_INT >= 26) {
             startInstallO(context, fileSavePath);
@@ -338,43 +313,4 @@ public class UpdateNew_background_Version {
             context.startActivity(intent);
         }
     }
-
-    /**
-     * 安装apk
-     *
-     * @param fileSavePath
-     */
-    private void openAPK(Context context, String fileSavePath) {
-        File file = new File(Uri.parse(fileSavePath).getPath());
-        String filePath = file.getAbsolutePath();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = null;
-        if (Build.VERSION.SDK_INT >= 24) {//判断版本大于等于7.0
-            System.out.println("fileprovider name is:" + context.getPackageName());
-            // 生成文件的uri，注意 下面参数com.ausee.fileprovider 为apk的包名加上.fileprovider，
-            data = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", new File(filePath));
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);// 给目标应用一个临时授权
-            LogUtil.d("111111");
-        } else {
-            LogUtil.d("222222");
-            data = Uri.fromFile(file);
-        }
-
-        intent.setDataAndType(data, "application/vnd.android.package-archive");
-        context.startActivity(intent);
-    }
-
-    private void installAPK(Context context) {
-        String serviceString = DOWNLOAD_SERVICE;
-        DownloadManager dManager = (DownloadManager) context.getSystemService(serviceString);
-        Intent install = new Intent(Intent.ACTION_VIEW);
-        File file = new File(Environment.DIRECTORY_DOWNLOADS + apkName);
-        Uri downloadFileUri = dManager.getUriForDownloadedFile(downloadId);
-        install.setDataAndType(downloadFileUri, "application/vnd.android.package-archive");
-        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        install.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        context.startActivity(install);
-    }
-
 }
