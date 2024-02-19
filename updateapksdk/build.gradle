@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -9,6 +10,7 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 31
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -29,3 +31,120 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
+
+//def isReleaseBuild() {
+//    return android.defaultConfig.versionName.contains("SNAPSHOT") == false
+//}
+//
+//def sonatypeRepositoryUrl
+//if (isReleaseBuild()) {
+//    sonatypeRepositoryUrl = RELEASE_REPOSITORY_URL
+//} else {
+//    sonatypeRepositoryUrl = SNAPSHOT_REPOSITORY_URL
+//}
+//
+//afterEvaluate { project ->
+//    publishing  {
+//        repositories {
+//            myPublication(MavenPublication) {
+//
+//                artifactId = PROJ_ARTIFACTID
+//
+//                Properties properties = new Properties()
+//                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//                repository(url: sonatypeRepositoryUrl) {
+//                    authentication(userName: properties.getProperty("USERNAME"), password: properties.getProperty("PASSWORD"))
+//                }
+//
+//                project {
+//                    name PROJ_NAME
+//                    groupId PROJ_GROUP
+//                    version android.defaultConfig.versionName
+//
+//
+//                    licenses {
+//                        license {
+//                            name PROJ_LICENCE_NAME
+//                            url PROJ_LICENCE_URL
+//                            distribution PROJ_LICENCE_DEST
+//                        }
+//                    }
+//
+//                    developers {
+//                        developer {
+//                            id DEVELOPER_ID
+//                            name DEVELOPER_NAME
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+////    signing {
+////        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+////        sign configurations.archives
+////    }
+//
+//    task androidJavadocs(type: Javadoc) {
+//        failOnError false
+//        source = android.sourceSets.main.java.source
+//        options {
+//            links "http://docs.oracle.com/javase/7/docs/api/"
+//            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+//        }
+//        classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//
+//    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//        classifier = 'javadoc'
+//        //basename = artifact_id
+//        from androidJavadocs.destinationDir
+//    }
+//
+//    task androidSourcesJar(type: Jar) {
+//        classifier = 'sources'
+//        from android.sourceSets.main.java.srcDirs
+//    }
+//
+//    artifacts {
+//        //archives packageReleaseJar
+//        archives androidSourcesJar
+//        archives androidJavadocsJar
+//    }
+//}
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            debug(MavenPublication) {
+//                //相应变体
+//                from components.debug
+//                // 定义发布属性，一般为模块包名
+//                groupId =  PROJ_GROUP
+//                //一般填写项目信息比如utlis,upgrade等功能性简洁描述
+//                artifactId = PROJ_ARTIFACTID
+//                //版本号
+//                version = '1.0.0'
+//            }
+//            release(MavenPublication) {
+//                from components.release
+//                groupId = PROJ_GROUP
+//                artifactId = PROJ_ARTIFACTID
+//                version = '1.0.0'
+//            }
+//        }
+//        //设置存储库信息
+//        repositories {
+//            maven {
+//                allowInsecureProtocol = true
+//                url = RELEASE_REPOSITORY_URL //私有的Maven库地址
+//                //allowInsecureProtocol = true//允许非https链接
+//                credentials {
+//                    username = 'admin'
+//                    password = 'admin123'
+//                }
+//            }
+//        }
+//    }
+//}

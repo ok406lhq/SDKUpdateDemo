@@ -302,8 +302,8 @@ public class UpdateUtil {
         log("准备启动安装步骤");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            log("若未启动，请注意：\n" + "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".u8FileProvider") + "”" + "\n" + "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
-            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".u8FileProvider", readyFile);
+            log("若未启动，请注意：\n" + "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".fileprovider") + "”" + "\n" + "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
+            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".fileprovider", readyFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {

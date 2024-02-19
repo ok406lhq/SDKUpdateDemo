@@ -63,8 +63,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.e("hzmd momo u8sdk", editDownloadUrl.getText().toString());
-                updateUtil.DEBUGMODE = true;
-                    updateUtil.setOnUpdateStatusChangeListener(null)
+//                updateUtil.DEBUGMODE = true;
+                updateUtil.setOnUpdateStatusChangeListener(null)
                         .showDownloadNotification("正在更新", "正在下载更新包...")
                         .showDownloadProgressDialog("正在下载", "后台下载", "取消")
                         .start(editDownloadUrl.getText().toString(), "发现更新",
